@@ -33,7 +33,7 @@ select_language() {
   elif [[ "${input_lang}" -eq 2 ]]; then
     lang="sv"
   else
-    echo "Invalid choice - defaulting to English"
+    echo "Using english by default"
     lang="en"
   fi
 }
@@ -44,6 +44,7 @@ select_difficulty() {
   echo "$prompt_diff_1"
   echo "$prompt_diff_2"
   echo "$prompt_diff_3"
+  echo "$prompt_diff_4"
 
   read input_difficulty
 
@@ -59,8 +60,13 @@ select_difficulty() {
     difficulty="hard"
     readonly min_secret_value=1
     readonly max_secret_value=127
+  elif [[ "${input_difficulty}" -eq 4 ]]; then
+    difficulty="impossible"
+    readonly min_secret_value=100
+    readonly max_secret_value=1000000
   else
     echo "Invalid choice - defaulting to easy"
+    echo ${prompt_diff_value_error}
     readonly min_secret_value=1
     readonly max_secret_value=1000
   fi
@@ -133,9 +139,12 @@ set_prompts() {
 
   if [[ "${selected_lang}" == "en" ]]; then
     prompt_diff_header="Select difficulty"
-    prompt_diff_1=" 1) Easy         (1-1000)"
-    prompt_diff_2=" 2) Intermediate (1-3333)"
-    prompt_diff_3=" 3) Hard         (1-127, with no help)"
+    prompt_diff_value_error="Invalid choice - defaulting to easy"
+    prompt_lang_value_error="Invalid choice - defaulting to English"
+    prompt_diff_1=" 1) Easy         (1 - 1 000)"
+    prompt_diff_2=" 2) Intermediate (1 - 3 333)"
+    prompt_diff_3=" 3) Hard         (1 - 127, with no help)"
+    prompt_diff_4=" 4) Impossible?  (?? - ??, with absolutely no help)"
     prompt_username="Enter your username"
     prompt_new_user_1="Welcome, "
     prompt_new_user_2="! It looks like this is your first time here."
@@ -159,9 +168,12 @@ set_prompts() {
     prompt_hard_closer="Very Close..., guess again:"
   elif [[ "${selected_lang}" == "sv" ]]; then
     prompt_diff_header="Välj svårighetsgrad"
-    prompt_diff_1=" 1) Lätt         (1-1000)"
-    prompt_diff_2=" 2) Mellan       (1-3333)"
-    prompt_diff_3=" 3) Svår         (1-127, ingen hjälp)"
+    prompt_diff_value_error="Felaktigt val - Sätter svårighetsnivå till Lätt"
+    prompt_lang_value_error="Ogiltigt val - väljer engelska."
+    prompt_diff_1=" 1) Lätt         (1 - 1 000)"
+    prompt_diff_2=" 2) Mellan       (1 - 3 333)"
+    prompt_diff_3=" 3) Svår         (1 - 127, ingen hjälp)"
+    prompt_diff_4=" 4) Omöjlig?     (?? - ??, ABSOLUT ingen hjälp!)"
     prompt_username="Ange spelarnamn"
     prompt_new_user_1="Välkommen, "
     prompt_new_user_2="! Det verkar som att det är första gången."
@@ -183,6 +195,8 @@ set_prompts() {
     prompt_hard_wrong="Mohahahaha.... Det var fel, gissa igen:"
     prompt_hard_close="Varmt..., gissa igen:"
     prompt_hard_closer="Varmare..., gissa igen:"
+  else
+    prompt_lang_value_error="Ogiltigt val - väljer engelska."
   fi
 }
 
@@ -198,7 +212,7 @@ select_language
 set_prompts "${lang}"
 
 echo
-# prompt player for difficulty leve
+# prompt player for difficulty level
 select_difficulty
 
 # Will set the random number to guess for.
@@ -240,7 +254,7 @@ echo "${prompt_guess_start_1} ${min_secret_value} ${prompt_guess_start_2} ${max_
 game_on
 
 # When game_on function is done we print success message.
-echo -e "${prompt_game_finished_1} ${number_of_guesses} ${prompt_game_finished_2} ${secret_number}${prompt_game_finished_3}"
+echo -e "${prompt_game_finished_1} ${number_of_guesses} ${prompt_game_finished_2} ${secret_number}${prompt_game_finished_3}\n"
 
 if [[ "${number_of_guesses}" -le 10 ]] && [[ $difficulty != "hard" ]]; then
   echo $prompt_game_finished_superb

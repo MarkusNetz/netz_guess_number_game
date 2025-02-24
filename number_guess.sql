@@ -15,7 +15,7 @@ CREATE TABLE `games` (
   `player_id` bigint unsigned NOT NULL,
   `winning_number` smallint unsigned NOT NULL,
   `total_guesses` smallint unsigned NOT NULL,
-  `difficulty` enum('easy','intermediate','hard') NOT NULL DEFAULT 'easy',
+  `difficulty` enum('easy','intermediate','hard','impossible') NOT NULL DEFAULT 'easy',
   `finished_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ) ENGINE=InnoDB;
 
