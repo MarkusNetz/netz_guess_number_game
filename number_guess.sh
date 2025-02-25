@@ -67,6 +67,7 @@ select_difficulty() {
   else
     echo "Invalid choice - defaulting to easy"
     echo ${prompt_diff_value_error}
+    difficulty="easy"
     readonly min_secret_value=1
     readonly max_secret_value=1000
   fi
